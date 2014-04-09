@@ -7,8 +7,14 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "BMKMapManager.h"
 
-@interface PJAppDelegate : UIResponder <UIApplicationDelegate>
+@interface PJAppDelegate : UIResponder <UIApplicationDelegate>{
+    
+    UINavigationController *navigationController;
+    BMKMapManager *_mapManager;
+
+}
 
 @property (strong, nonatomic) UIWindow *window;
 
