@@ -103,7 +103,6 @@
     self.navigationItem.rightBarButtonItem = searchBT;
     self.title = @"百度地图";
     _mapView = mapView;
-//    self.view = mapView;
     _search = [[BMKSearch alloc]init];
     [self.view addSubview:_mapView];
     
@@ -189,14 +188,29 @@
 
 -(void)startSearch{
     NSLog(@"kaishi....sousuo...");
-    UILabel *latLab = (UILabel*)[nibView viewWithTag:1];
-    int lat = [latLab.text intValue];
-    UILabel *lonLab = (UILabel*)[nibView viewWithTag:1];
-    int lon = [lonLab.text intValue];
-    NSLog(@"lat = %d,%d",lat,lon);
+    NSString *startName = ((UILabel*)[nibView viewWithTag:1]).text;
+    NSString *endName = ((UILabel*)[nibView viewWithTag:2]).text;
+    NSLog(@"startName = %@,endName = %@",startName,endName);
     
     [self addPointAnnotation];
-    [self onClickDriveSearch];
+    [self onClickDriveSearch:startName endName:endName];
+}
+
+-(void)onClickDriveSearch:(NSString*)startName endName:(NSString*)endName
+{
+	BMKPlanNode* start = [[BMKPlanNode alloc] init];
+	start.name = startName;
+	BMKPlanNode* end = [[BMKPlanNode alloc] init];
+	end.name = endName;
+    
+	BOOL flag = [_search transitSearch:@"上海" startNode:start endNode:end];
+	if (flag) {
+		NSLog(@"search success.");
+	}
+    else{
+        NSLog(@"search failed!");
+    }
+    
 }
 
 
@@ -281,7 +295,9 @@
 //}
 
 - (BMKAnnotationView *)mapView:(BMKMapView *)view viewForAnnotation:(id <BMKAnnotation>)annotation
+
 {
+    NSLog(@"00000000");
 	if ([annotation isKindOfClass:[RouteAnnotation class]]) {
 		return [self getRouteAnnotationView:view viewForAnnotation:(RouteAnnotation*)annotation];
 	}
@@ -311,22 +327,7 @@
 //	return nil;
 //}
 
--(void)onClickDriveSearch
-{
-	BMKPlanNode* start = [[BMKPlanNode alloc] init];
-	start.name = @"陆家嘴";
-	BMKPlanNode* end = [[BMKPlanNode alloc] init];
-	end.name = @"人民广场";
-    
-	BOOL flag = [_search transitSearch:@"上海" startNode:start endNode:end];
-	if (flag) {
-		NSLog(@"search success.");
-	}
-    else{
-        NSLog(@"search failed!");
-    }
-    
-}
+
 
 - (BMKOverlayView*)mapView:(BMKMapView *)map viewForOverlay:(id<BMKOverlay>)overlay
 {
